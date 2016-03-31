@@ -41,7 +41,7 @@
 <link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="花墨世界,花墨博客" />
 
 
 
@@ -140,22 +140,32 @@ Quick">
     <ul id="menu" class="menu">
       
         
-        <li class="menu-item menu-item-主页">
+        <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-question-circle fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
             
-            menu.主页
+            Home
           </a>
         </li>
       
         
-        <li class="menu-item menu-item-关于我">
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
-              <i class="menu-item-icon fa fa-question-circle fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
             
-            menu.关于我
+            About
           </a>
         </li>
       
@@ -282,7 +292,7 @@ Quick">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2013/07/13/hello-world - 副本 (4)" rel="next" title="Hello World">
+              <a href="/2013/07/13/hello-world - 副本 (3)" rel="next" title="Hello World">
                 <i class="fa fa-chevron-left"></i> Hello World
               </a>
             
@@ -348,7 +358,7 @@ Quick">
       <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/images/default_avatar.jpg"
+               src="/images/Hm_logo.jpg"
                alt="Sh1nes00n" />
           <p class="site-author-name" itemprop="name">Sh1nes00n</p>
           <p class="site-description motion-element" itemprop="description">花墨博客,花墨世界</p>
