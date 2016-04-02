@@ -58,15 +58,15 @@ blockquote {
 }
 
 
-pre {
-    font-family: Inconsolata, Consolas, "DEJA VU SANS MONO", "DROID SANS MONO", Proggy, monospace;
-    font-size: 75%;
-    border: solid 1px lightgrey;
-    background-color: Ivory;
-    padding: 5px;
-    line-height: 130%;
-    margin-left: 10px;
-    width: 95%;
+pre,
+.highlight {
+  background: #f7f7f7;
+  margin: 20px 0;
+  padding: 15px;
+  overflow: auto;
+  font-size: 13px;
+  color: #4d4d4c;
+  line-height: 1.6;
 }
 
 
