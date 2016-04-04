@@ -12,3 +12,15 @@ li {
 li a{
     color: #fff;
 }
+.page{
+    text-align: center;
+    font-size: 15px;
+    
+}
+.page a,.page span{
+    margin-left: 20px;
+    margin-right: 20px;
+}
+.copyright{
+ text-align: center;   
+}
