@@ -21,7 +21,7 @@
 </ol>
 </blockquote>
 <p>贴上一张原理图：</p>
-<p><img src="http://xss.sx/wp-content/uploads/2015/03/20131201194608140.png" alt="冒泡排序图解"></p>
+<p><img src="http://i3.piimg.com/176cc8776021e270.gif" alt="冒泡排序图解"></p>
 <p>贴上代码，注释已经说明白了：</p>
 <pre><code class="language-c">
 //冒泡排序算法实现
