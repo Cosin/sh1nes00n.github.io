@@ -1,0 +1,14 @@
+ul {
+    list-style: none;
+    height: 42px;
+}
+
+li {
+    float: left;
+    width: 20%;
+    text-align: center;
+    cursor: pointer;
+}
+li a{
+    color: #fff;
+}
