@@ -24,3 +24,29 @@ li a{
 .copyright{
  text-align: center;   
 }
+.panel {
+      display: none;
+      width: 280px;
+      padding: 20px;
+      background-color: #333;
+      color: #fff;
+      border-radius: 0!important;
+}
+
+#open-panel{
+      border-radius:10px;
+      color: #000;
+      cursor: pointer;
+      display: block;
+      font-family: Courier New;
+      font-size: 25px;
+      font-weight: bold;
+      height: 50px;
+      margin-top: 20px;
+      line-height: 45px;
+      text-align: center;
+      text-shadow: 0 -4px;
+}
+#open-panel:hover,#open-panel:visited,#open-panel:link{
+    text-decoration: none;
+}
