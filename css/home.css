@@ -1,14 +1,8 @@
 ul {
     list-style: none;
-    height: 42px;
+    padding: 0;
 }
 
-li {
-    float: left;
-    width: 20%;
-    text-align: center;
-    cursor: pointer;
-}
 li a{
     color: #fff;
 }
@@ -27,7 +21,6 @@ li a{
 .panel {
       display: none;
       width: 280px;
-      padding: 20px;
       background-color: #333;
       color: #fff;
       border-radius: 0!important;
@@ -47,6 +40,17 @@ li a{
       text-align: center;
       text-shadow: 0 -4px;
 }
+
 #open-panel:hover,#open-panel:visited,#open-panel:link{
     text-decoration: none;
 }
+
+.panel-list li{
+    float: none;
+    text-align: center;
+    display: block;
+    padding: 10px 0;
+    border-top: 1px solid rgba(255,255,255,.1);
+}
+
+
