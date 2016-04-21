@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>第11题：移除数组中的重复元素——计蒜客挑战”难题”系列 | 花墨世界</title>
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
+</head>
+<body>
+<h2>第11题：移除数组中的重复元素——计蒜客挑战”难题”系列</h2>
+<blockquote>
+<p>/*<br>
+前几天去爬泰山了，一直没更新，上山时还没什么感觉，下山后简直要崩溃啊，骨头都散了，继续更新......<br>
+*/</p>
+</blockquote>
+<p>给定一个升序排列的数组，去掉重复的数，并返回新的数组的长度。<br>
+例如：<br>
+数组A = {1, 1, 2}，你的函数应该返回长度2，新数组为{1, 2}<br>
+要求：<br>
+不能新开数组分配额外的空间。即常数空间限制。<br>
+提示：<br>
+输入一个整数n，以及其对应的数组A[n]，输出新数组长度</p>
+<p>样例输入</p>
+<blockquote>
+<p>5
+0 0 1 1 2</p>
+</blockquote>
+<p>样例输出</p>
+<blockquote>
+<p>3</p>
+</blockquote>
+<pre><code class="language-c">#include &quot;stdio.h&quot;
+
+int main()
+
+{
+	/*i是循环变量，n和A[]是题目要求，temp是一个临时值，用来存储
+	的值与A[i+1]比较，如果相等则把下一个值置空，反之将A[i+1]赋值给temp
+	count是置空的数目，用原数组长度减去置空数即为新数组长度*/ 
+	int i,n,A[1000],temp,count = 0;
+	scanf(&quot;%d&quot;,&amp;n);
+	for(i = 0;i &lt; n;i++)
+	{
+		scanf(&quot;%d&quot;,&amp;A[i]);
+	}
+	temp = A[0];
+	for(i = 1;i &lt; n;i++)
+	{
+		if(A[i] == temp)
+		{
+			A[i] = ' ';
+			count++;
+		}
+		else
+			temp = A[i];
+	}
+	printf(&quot;%d\n&quot;,n-count);
+	return 0;
+} 
+</code></pre>
+
+
+</body>
+</html>
