@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>计蒜客：第1题：A+B+C问题&第2题：整除问题&第3题：判断质数 | 花墨世界</title>
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
+</head>
+<body>
+<h2>计蒜客：第1题：A+B+C问题&第2题：整除问题&第3题：判断质数</h2>
+<p>前三题没理由单独写，放一块吧</p>
+<h1>第1题：A+B+C</h1>
+<pre><code class="language-c">int main()
+{
+    int a,b,c;
+    scanf(&quot;%d%d%d&quot;,&amp;a,&amp;b,&amp;c);
+    printf(&quot;%d&quot;,a+b+c);
+}
+</code></pre>
+<h1>第2题：整除问题</h1>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+    int a,b;
+    scanf(&quot;%d%d&quot;,&amp;a,&amp;b);
+    if(a % b == 0)
+        printf(&quot;YES&quot;);
+    else
+        printf(&quot;NO&quot;);
+}
+</code></pre>
+<h1>第3题：判断质数</h1>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+int main()
+{
+    int a,i;
+    scanf(&quot;%d&quot;,&amp;a);
+    for(i = 2;i &lt; a;i++)
+    {
+        if(a % i == 0)
+        {
+            printf(&quot;NO&quot;);
+            return 0;
+        }
+        else
+            continue;
+    }
+    if(i == a)
+        printf(&quot;YES&quot;);
+}
+</code></pre>
+
+
+</body>
+</html>
