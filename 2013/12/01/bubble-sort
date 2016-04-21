@@ -2,13 +2,13 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>冒泡排序详解222 | 花墨世界</title>
+    <title>冒泡排序详解 | 花墨世界</title>
     <link href="/css/main.css" rel="stylesheet">
     <link href="/css/prism.css" rel="stylesheet">
     <script src="/js/prism.js"></script>
 </head>
 <body>
-<h2>冒泡排序详解222</h2>
+<h2>冒泡排序详解</h2>
 <p>冒泡排序概念：<br>
 在排序过程中小数往前放，大数往后移，就像冒泡一样，所以取名“冒泡排序”，有的地方也叫“起泡排序”。
 算法原理（From：百度百科）：</p>
