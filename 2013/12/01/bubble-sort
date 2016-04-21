@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" content="text/html">
     <title>冒泡排序详解 | 花墨世界</title>
     <link href="/css/main.css" rel="stylesheet">
     <link href="/css/prism.css" rel="stylesheet">
