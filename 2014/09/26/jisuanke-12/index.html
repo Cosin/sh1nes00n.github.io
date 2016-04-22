@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>No.12 最后一个单词的长度——计蒜客 | 花墨世界</title>
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
+</head>
+<body>
+<h2>No.12 最后一个单词的长度——计蒜客</h2>
+<p>给定由大写，小写字母和空格组成的字符串，返回最后一个单词的长度。<br>
+如果不存在最后一个单词，返回0<br>
+注意：<br>
+“单词”是指不包含空格符号的字符串<br>
+例如：<br>
+s = “hello World”, 那么返回的结果是5<br>
+格式：
+第一行输入字符串s，然后输出s中最后一个单词的长度。</p>
+<p>样例输入</p>
+<blockquote>
+<p>Today is a nice day</p>
+</blockquote>
+<p>样例输出</p>
+<blockquote>
+<p>3</p>
+</blockquote>
+<p>关于此题：<br>
+这道题有个陷阱，题目说是 s = “hello World”，那个这字符串也有可能是s = “hello World       ”（注意最后的空格），刚开始我没注意这个，结果浪费太多时间没找到问题所在，还有一点，做这些题时所声明的数组尽量大，如果A[100]、A[1000]什么的肯定AC不了，往大了来吧，题目没有说明测试范围也算是一个缺陷吧。</p>
+<pre><code class="language-c">#include &quot;stdio.h&quot;
+#include &quot;string.h&quot;
+
+int main()
+
+{
+	char s[10000];
+	int count = 0,i,c;
+	gets(s);
+	for(i = strlen(s)-1;i &gt; 0;i--)
+	{
+		if(s[i] != ' ')	//从后往前看，当最后一个不是空格的时候开始计数
+			count++;
+		if(count &gt; 0)	//当count计数时所在位置的单词已经是最后一个了，在出现空格时表示结束
+			if(s[i] == ' ')
+				break;
+	}	
+	printf(&quot;%d\n&quot;,count);
+	return 0;
+}
+
+</code></pre>
+
+
+</body>
+</html>

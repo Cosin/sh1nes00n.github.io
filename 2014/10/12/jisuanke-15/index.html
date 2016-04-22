@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>No.15 单独的数字——计蒜客 | 花墨世界</title>
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
+</head>
+<body>
+<h2>No.15 单独的数字——计蒜客</h2>
+<p>给定一个数组，除了一个数出现1次之外，其余数都出现3次。找出出现一次的数。<br>
+如：{1, 2, 1, 2, 1, 2, 7}, 找出7.<br>
+格式：<br>
+第一行输入一个数n，代表数组的长度，接下来一行输入数组A[n],(输入的数组必须满足问题描述的要求),最后输出只出现一次的数。<br>
+要求：<br>
+你的算法只能是线性时间的复杂度，并且不能使用额外的空间哦～</p>
+<p>样例输入</p>
+<blockquote>
+<p>4<br>
+0 0 0 5</p>
+</blockquote>
+<p>样例输出</p>
+<blockquote>
+<p>5</p>
+</blockquote>
+<p>问题解析：<br>
+其实这题不难（尽管“不能使用额外的空间”），主要原理就是遍历数组中有没有与其重复的数字，判断有没有重复的原理就是设置一个计数器，具体看代码及注释。</p>
+<pre><code class="language-c">#include &quot;stdio.h&quot;
+
+int main()
+
+{
+	int i,j,n,A[10000],count = 0;	//count为计数器 
+	scanf(&quot;%d&quot;,&amp;n);		//为n赋值 
+	for(i = 0;i &lt; n;i++)	//为数组赋值 
+		scanf(&quot;%d&quot;,&amp;A[i]);
+	for(i = 0;i &lt; n;i++)	//第一层循环：读取每个数，与后面数值作比较 
+	{
+		for(j = 0;j &lt; n;j++)	//第二次循环：读取i后面的数 
+		{
+			if(A[i] == A[j])		//判断外层数是否与内层数相等 
+				count++;		//若相等则将+1 
+		}
+		if(count == 1)	//若计数器==1(也就是数组中只有其本身) 
+		{
+			printf(&quot;%d\n&quot;,A[i]);	//输出此数并结束 
+			return 0;
+		}
+		count = 0;
+	}
+	return 0;
+} 
+</code></pre>
+
+
+</body>
+</html>
