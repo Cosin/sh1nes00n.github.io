@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>360CrackMe第一题题解 | 花墨世界</title>
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
+</head>
+<body>
+<h2>360CrackMe第一题题解</h2>
+<p>这题目有些日子了，之前做Android时没太接触NDK，CM的APP还原出源码（java）后一直放在那里没动，看着pt哥、鬼哥等人都在出干货，我的虽然没什么技术含量，但还是想分享一下“经验”（板砖轻拍），下面看下题目：</p>
+<p>题目说明：</p>
+<blockquote>
+<ol>
+<li>请重打包本qihootest1.apk，将java层实现的解密算法移至jni层重新实现，并在同一控件中展示解密后的内容；</li>
+<li>本题2分，以非重打包的方式达到同等效果的不计分。</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>题目附件：qihootest1.apk（软件中已经用java层代码实现了解密软件包的文件并将加密的内容显示在启动界面上）</p>
+</blockquote>
+<p>题目不难，没壳也没做混淆，因此很适合新手做练习，但需要一定的编程基础。</p>
+<p>源文件只有一个MainActivity.java，通过下面的smali代码结构猜测onCreate()中可能是调用decrypt()和desCrypto()来对文件进行加解密:</p>
+<p><img src="http://7xph8p.com1.z0.glb.clouddn.com/16-4-22/79027750.jpg" alt=""></p>
+<p>来看下还原出的java代码（当时比较闲，所以直接还原了代码）：</p>
+<pre><code class="language-java">try {
+           assetManager = getAssets(); //对assets中文件的操作
+InputStream inputStream = assetManager.open(&quot;encryptedData&quot;);  //打开流
+           len = inputStream.available();
+           inputByte = new byte[len];
+           if(len == inputStream.read(inputByte)){
+               try {
+                   decryResult = decrypt(inputByte, &quot;Qihoo123&quot;);   //调用decrypt解密
+              } catch (IOException e) {
+                  e.printStackTrace();
+              }
+            }else {
+               decryResult = getString(2131034122).getBytes(); //因为资源文件是直接从原APK中取得，所以这里直接用R.java中的id，作用是输出错误提示
+           }
+            String a = new String(decryResult);
+            decodeText.setText(a);
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+</code></pre>
+<p>具体代码请看附件。</p>
+<p>有了java代码就可以移植到native层：</p>
+<pre><code class="language-c">#include &quot;jni.h&quot;
+#include &quot;com_qihoo_firsttest_Res.h&quot;
+  
+/**
+ * @author 花墨
+ * 2015年1月6日
+ * http://xss.sx
+ */
+  
+JNIEXPORT jbyteArray JNICALL Java_com_qihoo_firsttest_Res_decrypt
+  (JNIEnv *env, jobject obj, jbyteArray src, jstring password){
+  
+    jclass clazz_random = env-&gt;FindClass(&quot;java/security/SecureRandom&quot;);
+    jmethodID jm_random = env-&gt;GetMethodID(clazz_random,&quot;&quot;,&quot;()V&quot;);
+    jobject jo_random = env-&gt;NewObject(clazz_random,jm_random);
+  
+    jclass clazz_String = env-&gt;FindClass(&quot;java/lang/String&quot;);
+    jmethodID jm_string = env-&gt;GetMethodID(clazz_String,&quot;getBytes&quot;,&quot;()[B&quot;);
+    jbyteArray bytearray = (jbyteArray)env-&gt;CallObjectMethod(password,jm_string);
+  
+  
+    jclass jc_DESKeySpec = env-&gt;FindClass(&quot;javax/crypto/spec/DESKeySpec&quot;);
+    jmethodID jm_DESKeySpec = env-&gt;GetMethodID(jc_DESKeySpec,&quot;&quot;,&quot;([B)V&quot;);
+    jobject jo_DESKeySpec = env-&gt;NewObject(jc_DESKeySpec,jm_DESKeySpec,bytearray);
+  
+    jclass jc_SecretKeyFactory = env-&gt;FindClass(&quot;javax/crypto/SecretKeyFactory&quot;);
+    jmethodID jm_SecretKeyFactory = env-&gt;GetStaticMethodID(jc_SecretKeyFactory,&quot;getInstance&quot;,&quot;(Ljava/lang/String;)Ljavax/crypto/SecretKeyFactory;&quot;);
+    jobject jo_getInstance = env-&gt;CallStaticObjectMethod(jc_SecretKeyFactory,jm_SecretKeyFactory,env-&gt;NewStringUTF(&quot;DES&quot;));
+  
+    jmethodID jm_SecretKey = env-&gt;GetMethodID(jc_SecretKeyFactory,&quot;generateSecret&quot;,&quot;(Ljava/security/spec/KeySpec;)Ljavax/crypto/SecretKey;&quot;);
+    jobject jo_SecretKey = env-&gt;CallObjectMethod(jo_getInstance,jm_SecretKey,jo_DESKeySpec);
+  
+    jclass jc_Cipher = env-&gt;FindClass(&quot;javax/crypto/Cipher&quot;);
+    jmethodID jm_Cipher_getInstance = env-&gt;GetStaticMethodID(jc_Cipher,&quot;getInstance&quot;,&quot;(Ljava/lang/String;)Ljavax/crypto/Cipher;&quot;);
+    jobject jo_Cipher = env-&gt;CallStaticObjectMethod(jc_Cipher,jm_Cipher_getInstance,env-&gt;NewStringUTF(&quot;DES&quot;));
+  
+    jmethodID jm_init = env-&gt;GetMethodID(jc_Cipher,&quot;init&quot;,&quot;(ILjava/security/Key;Ljava/security/SecureRandom;)V&quot;);
+    env-&gt;CallVoidMethod(jo_Cipher,jm_init,2,jo_SecretKey,jo_random);
+  
+    jmethodID jm_doFinal = env-&gt;GetMethodID(jc_Cipher,&quot;doFinal&quot;,&quot;([B)[B&quot;);
+    jbyteArray a = (jbyteArray)env-&gt;CallObjectMethod(jo_Cipher,jm_doFinal,src);
+    return a;
+}
+</code></pre>
+<p><img src="http://7xph8p.com1.z0.glb.clouddn.com/16-4-22/33712065.jpg" alt=""></p>
+<p>最后附上java、C++源码（可直接编译运行）和原APK链接：</p>
+<p>链接：http://pan.baidu.com/s/1jGgiBNC 密码：bjw7 解压密码:www.pd521.com</p>
+
+
+</body>
+</html>

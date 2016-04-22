@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>Android中ListView的分页加载数据方式 | 花墨世界</title>
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
+</head>
+<body>
+<h2>Android中ListView的分页加载数据方式</h2>
+<p>Listview在应用到商城的商品列表或者类似微博的条目列表时需要加载大量数据，如果在界面启动时就加载全部数据的话肯定会加重手机负担，也会影响APP的加载速度，这时候就Listview分页加载的好处就体现出来。</p>
+<p>新建一个测试项目，布局界面只有三个：activity_main.xml，footer_listview.xml，item.xml。</p>
+<p>activity_main.xml为主界面，里面只有一个listview控件。</p>
+<pre><code class="language-xml">&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    tools:context=&quot;.MainActivity&quot; &gt;
+    
+    &lt;ListView 
+        android:id=&quot;@+id/list&quot;
+        android:layout_height=&quot;fill_parent&quot;
+        android:layout_width=&quot;fill_parent&quot;&gt;
+    &lt;/ListView&gt;
+
+&lt;/RelativeLayout&gt;
+</code></pre>
+<p>footer_listview.xml为listview底部视图，点击后加载数据。</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:orientation=&quot;vertical&quot; &gt;
+    
+    &lt;Button 
+        android:id=&quot;@+id/load_more&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_width=&quot;fill_parent&quot;
+        android:text=&quot;Load More&quot;/&gt;
+
+&lt;/LinearLayout&gt;
+</code></pre>
+<p>item.xml为listview的item视图，里面只有一个textview。</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:orientation=&quot;vertical&quot; &gt;
+    
+    &lt;TextView 
+        android:id=&quot;@+id/tv&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:layout_width=&quot;wrap_content&quot;
+        android:textSize=&quot;50sp&quot;
+        android:text=&quot;1111&quot;/&gt;
+    
+&lt;/LinearLayout&gt;
+</code></pre>
+<p>写完布局文件后开始写listview的适配器，此处用来做演示，就先用ArrayAdapter填充数据，代码如下：</p>
+<pre><code class="language-java">final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, initData());
+
+private List&lt;String&gt; initData(){
+		for(int i = 0;i &lt; 10;i++){
+			list.add(&quot;花墨世界 cnhuamo.net：&quot;+i);
+		}
+		return list;
+	}
+</code></pre>
+<p>然后在listview底部加上footer视图。</p>
+<pre><code class="language-java">loadMoreView = getLayoutInflater().inflate(R.layout.footer_listview,null );
+listview.addFooterView(loadMoreView);
+</code></pre>
+<p>之后要实现点击按钮后加载数据的功能。</p>
+<pre><code class="language-java">button.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				int i = adapter.getCount(),j = adapter.getCount()+5;
+				for(;i &lt; j;i++){
+					list.add(&quot;花墨世界 cnhuamo.net：&quot;+i);
+				}
+				adapter.notifyDataSetChanged();
+			}
+		});
+</code></pre>
+<p>最后要设置下listview滚动条的监听器，具体请看代码注释。</p>
+<pre><code class="language-java">listview.setOnScrollListener(new OnScrollListener() {
+			//当滑动到底部后自动加载，判断滑动条停止&amp;&amp;最后可视条目等于adapter的条目
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				if(scrollState == OnScrollListener.SCROLL_STATE_IDLE &amp;&amp; lastIndex == adapter.getCount()){
+					//自动加载功能，加载数据可以写在此处
+				}
+			}
+			
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				//计算最后可见条目索引
+				lastIndex = firstVisibleItem + visibleItemCount -1;
+				//所有条目和最大条目相等时移除底部View
+				if(totalItemCount == maxNum +1){
+					listview.removeFooterView(loadMoreView);
+					Toast.makeText(MainActivity.this, &quot;数据加载完成！&quot;, Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+</code></pre>
+<p>运行结果：</p>
+<p><img src="http://i3.piimg.com/956e62bcd266220e.png" alt=""></p>
+<p><img src="http://i4.piimg.com/51b4fc8b4ebe7087.gif" alt=""></p>
+
+
+</body>
+</html>

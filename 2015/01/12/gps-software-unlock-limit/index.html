@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>某GPS软件Java层去功能限制分析 | 花墨世界</title>
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
+</head>
+<body>
+<h2>某GPS软件Java层去功能限制分析</h2>
+<p>APP名称】MapGGgugeban
+【分析工具】Android Killer
+【工具下载】http://www.pd521.com/thread-136-1-1.html
+【APP下载地址】链接：http://pan.baidu.com/s/1hqw1OJq密码：kw5i</p>
+<p>APP来自论坛一哥们，原文地址：http://www.pd521.com/thread-181-1-1.html。</p>
+<p>打开软件后，首先映入眼帘的是这个（如果软件无法安装，请先安装Google相关服务）：</p>
+<p><img src="http://7xph8p.com1.z0.glb.clouddn.com/16-4-22/13442379.jpg" alt=""></p>
+<p>然后就看注册页面：</p>
+<p><img src="http://7xph8p.com1.z0.glb.clouddn.com/16-4-22/75970070.jpg" alt=""></p>
+<p>软件通过注册码的形式来限制功能，最简单的就是通过爆破来解除限制，当点击确定后无任何提示，包括其他功能也是，点击后无任何反应，这就不能通过搜索关键词的方式来，AK有一个很方便的功能:查看APK中的所有字符串，将APK拖入AndroidKiller中，点击代码框右上角的小眼睛，像这样：</p>
+<p><img src="http://7xph8p.com1.z0.glb.clouddn.com/16-4-22/58156477.jpg" alt=""></p>
+<p>从这里可以查看当前APK所有（Java层）的字符串，看看能有什么发现：</p>
+<p><img src="http://7xph8p.com1.z0.glb.clouddn.com/16-4-22/99021096.jpg" alt=""></p>
+<p>于是，我们像哥伦布发现新大陆般看到了希望，双击字符串定位到所在位置，代码如下：</p>
+<pre><code class="language-c">:pswitch_15
+    iget-boolean v0, p0, Lmapgg/pack/MapggActivity;-&gt;af:Z
+ 
+    if-eqz v0, :cond_7
+ 
+    const-string v0, &quot;\u60a8\u5df2\u6ce8\u518c,\u8c22\u8c22!&quot;  #您已注册，谢谢！
+ 
+    invoke-static {p0, v0, v6}, Landroid/widget/Toast;-&gt;makeText(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;
+ 
+    move-result-object v0
+ 
+    invoke-virtual {v0}, Landroid/widget/Toast;-&gt;show()V
+ 
+    goto/16 :goto_0
+</code></pre>
+<p>目前我们觉得这里是关键跳转:“if-eqz v0, :cond_7”，如果v0等于0的话就跳转.</p>
+<p>如果不让它跳转会怎样? 把eqz改成nez，像这样：</p>
+<p><img src="http://7xph8p.com1.z0.glb.clouddn.com/16-4-22/89301155.jpg" alt=""></p>
+<p>你没看错，是代码提示，是不是很IDE？</p>
+<p>运行下试试：</p>
+<p><img src="http://7xph8p.com1.z0.glb.clouddn.com/16-4-22/8938049.jpg" alt=""></p>
+<p>看着弹出的这个提示是不是很开森？当我们满怀希望去试试那些没解锁的功能的时候发现竟然还是没任何反应，并且上方“辅助信息”那里还是在提示注册，我们再看看有什么不对的地方。跳转处有一句“iget-booleanv0, p0, Lmapgg/pack/MapggActivity;-&gt;af:Z”，v0=af，af是个布尔型变量，现在可以猜测af存储着你是否已经注册，在AK中搜索af，发现MapggActivity.smali、r.smali、s.smali三个文件中都有af变量，现在我们可以这么想：作者是不是在每个功能触发前都会验证下是否已经注册（验证af是否为true）？那我们就先把入口文件的af的初始化值设为true，再将其他处的值也设为true，运行后会发现点击注册后竟然又提示输入注册码，再来仔细看下代码:</p>
+<p>片段一：</p>
+<pre><code class="language-c">iput-boolean v11, p0, Lmapgg/pack/MapggActivity;-&gt;af:Z
+ 
+iput-boolean v11, p0, Lmapgg/pack/MapggActivity;-&gt;al:Z
+</code></pre>
+<p>片段二：</p>
+<pre><code class="language-c">iput-boolean v5, p0, Lmapgg/pack/MapggActivity;-&gt;af:Z
+ 
+iput-boolean v5, p0, Lmapgg/pack/MapggActivity;-&gt;al:Z
+</code></pre>
+<p>片段三：</p>
+<pre><code class="language-c">iput-boolean v4, p0, Lmapgg/pack/MapggActivity;-&gt;al:Z
+ 
+iput-boolean v5, p0, Lmapgg/pack/MapggActivity;-&gt;af:Z
+</code></pre>
+<p>查看所有af的代码后我们会发现，每个af的附件都会有一个al变量，并且al的值也是布尔型，这时候我们可以这么想：作者意识到直接判断会很容易被破解，于是可爱的作者就用了两个变量来判断是否已经注册。那就将al的值也都改为true试试（改坏了又不花钱( ╯□╰ )），注意，不要搜索al，只改af附近的al即可，运行后，会发现这个：</p>
+<p><img src="http://7xph8p.com1.z0.glb.clouddn.com/16-4-22/1414347.jpg" alt=""></p>
+<p>画面太美，我不敢看！</p>
+<p>再来试试功能有没有限制：</p>
+<p><img src="http://7xph8p.com1.z0.glb.clouddn.com/16-4-22/75143457.jpg" alt=""></p>
+<p>点击菜单中的功能后终于有了反应。</p>
+<p>直接点击地图也会直接定位坐标，像这样：</p>
+<p><img src="http://i3.piimg.com/170255de34501724.gif" alt=""></p>
+<p>到此也就结束了，不过当你点击注册的时候还会弹出注册框，不过那已经不重要了。</p>
+<p>结语：破解还是靠些许运气，当然，你技术够牛也就不需要什么运气，本篇文章是新手教程，记录了我在破解过程中的想法及思路，不喜勿喷，老鸟飞过，如有雷同，不胜荣幸，转载还请注明出处，谢谢各位看到这里。</p>
+
+
+</body>
+</html>

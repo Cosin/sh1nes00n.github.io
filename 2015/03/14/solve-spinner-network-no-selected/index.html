@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>解决Android Spinner网络获取数据后无法选中问题 | 花墨世界</title>
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
+</head>
+<body>
+<h2>解决Android Spinner网络获取数据后无法选中问题</h2>
+<p>近期做项目的时候遇到这么一个问题，从服务端获取数据后绑定到Spinner中，点击Sipnner后可以在列表中看到数据（如图），但是无法选中，一番百谷之后发现有人遇到了跟我一样的问题，http://zhidao.baidu.com/question/983506242874276619.html</p>
+<p><img src="http://i2.piimg.com/7f09dab2f941ebdc.gif" alt=""></p>
+<h1>解决方案一</h1>
+<p>软件启动后我们会发现Spinner的默认值为空项，点击下拉后再点击选项会无法选中，我们大多是用ArrayList做为Spinner的数据源，此时只需在加载网络数据之前为ArrayList添加一项即可（如第一项为：请选择，如图），具体可以参考下代码：</p>
+<p><img src="http://i2.piimg.com/24c5778cee82e0bf.gif" alt=""></p>
+<p>解决前：</p>
+<pre><code class="language-java">//list.add(&quot;请选择&quot;);
+FinalHttp fh = new FinalHttp();
+fh.get(&quot;http://webservice.webxml.com.cn/WebServices/WeatherWS.asmx/getRegionProvince?&quot;, new AjaxCallBack()
+{
+    @Override
+    public void onSuccess(String t)
+    {
+        super.onSuccess(t);
+        XMLHelper.getResult(&quot;string&quot;, t, new CallBack()
+        {
+            @Override
+            public void getResult(String result)
+            {
+                list.add(result);
+            }
+        });
+    }
+});
+ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, list);
+adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+spinner.setAdapter(adapter);
+</code></pre>
+<p>解决后：</p>
+<pre><code class="language-java">list.add(&quot;请选择&quot;);
+FinalHttp fh = new FinalHttp();
+fh.get(&quot;http://webservice.webxml.com.cn/WebServices/WeatherWS.asmx/getRegionProvince?&quot;, new AjaxCallBack()
+{
+    @Override
+    public void onSuccess(String t)
+    {
+        super.onSuccess(t);
+        XMLHelper.getResult(&quot;string&quot;, t, new CallBack()
+        {
+            @Override
+            public void getResult(String result)
+            {
+                list.add(result);
+            }
+        });
+    }
+});
+ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, list);
+adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+spinner.setAdapter(adapter);
+</code></pre>
+<p>如果不想添加一项，则请看方案二。</p>
+<h1>解决方案二</h1>
+<p>数据源加载成功，却无法选中，由于数据源是异步加载，我猜测问题是出在为Spinner设置Adapter时，所以将设置Adapter写在完全加载完数据之后，试了一下，完美解决。</p>
+<p><img src="http://i2.piimg.com/b3d901703c3e50cc.gif" alt=""></p>
+<p>附上修改后代码：</p>
+<pre><code class="language-java">FinalHttp fh = new FinalHttp();
+fh.get(&quot;http://webservice.webxml.com.cn/WebServices/WeatherWS.asmx/getRegionProvince?&quot;, new AjaxCallBack()
+{
+    @Override
+    public void onSuccess(String t)
+    {
+        super.onSuccess(t);
+        XMLHelper.getResult(&quot;string&quot;, t, new CallBack()
+        {
+            @Override
+            public void getResult(String result)
+            {
+                list.add(result);
+            }
+        });
+ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, list);
+adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+spinner.setAdapter(adapter);
+    }
+});
+</code></pre>
+
+
+</body>
+</html>
