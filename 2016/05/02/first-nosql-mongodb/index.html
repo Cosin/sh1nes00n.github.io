@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>NoSQL第一眼——MongoDB | 花墨世界</title>
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/prism.css" rel="stylesheet">
+    <script src="/js/prism.js"></script>
+</head>
+<body>
+<h2>NoSQL第一眼——MongoDB</h2>
+<p>Nosql类型以前只是用来做缓存，从没在生产环境或者自己项目中正式使用过，好奇心作祟，随即体验一下，本文只是从粗浅方面略谈一二，参考自<a href="https://book.douban.com/subject/26333934/" target="_blank" rel="external">《大数据存储MongoDB实战指南》</a>（买的话不推荐这本），图书馆只有两本相关书籍，因此借阅了时间较近的一本。</p>
+<p>写此文时MongoDB的版本号为3.2.6。</p>
+<p>相对于关系型数据库，Nosql中最重要的就是“无关系”，没有外键，从而也不会有Join操作。</p>
+<p>MongoDB中，用JSON来表示一条记录，当然，它叫BSON对象，或者说是Document，像这样：</p>
+<blockquote>
+<p>{ &quot;id&quot;:1,<br>
+&quot;name&quot;:foo,<br>
+&quot;age&quot;:10 }</p>
+</blockquote>
+<p>多个Document组成Collection，相当于关系型数据库中的表，像这样：值得注意的是，每个BSON对象中的键并不一定相同，不像Mysql中的字段一样，每条记录都会存在这个字段，MongoDB中无需这样，这种灵活的存储方式，使得查询操作尽量地避开Join的使用。</p>
+<h1>环境</h1>
+<p>与MySql相比，开源的MongoDB同样支持主流的三大平台，Linux下的安装更是容易的出奇，我在本地测试时用的Ubuntu，直接<code>apt-get update</code>和<code>apt-get install mongodb</code>即可，注意，墙高可能会出现如下情况：</p>
+<p><img src="http://7xph8p.com1.z0.glb.clouddn.com/16-5-2/3484433.jpg" alt=""></p>
+<p>安装成功后就像这样：</p>
+<p><img src="http://7xph8p.com1.z0.glb.clouddn.com/16-5-2/63556705.jpg" alt=""></p>
+<h1>CURD</h1>
+<p>/<em>未完待续......</em>/</p>
+
+
+</body>
+</html>
