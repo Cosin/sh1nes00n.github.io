@@ -1,3 +1,7 @@
+body{
+    font-size: 18px;
+    font-family: "PingHei", "Lucida Grande", "Lucida Sans Unicode", Helvetica, Tahoma, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei", STXihei, STHeiti, Heiti, SimSun, sans-serif;
+}
 ul {
     list-style: none;
     padding: 0;
